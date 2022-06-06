@@ -17,7 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             /*ajax instead of form data*/
             async function uploadFile() {
                 let formData = new FormData();
-                //"file" RequestParam, fileupload input id
+                //@RequestParam("file") ,  <input id="fileupload"/>
                 formData.append("file", fileupload.files[0]);
                 let response = await fetch('/upload', {
                     method: "POST",
