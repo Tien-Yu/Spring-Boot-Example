@@ -1,4 +1,4 @@
-package com.example.securityjpa;
+package com.example.securityauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +8,7 @@ class SpringBootSecurityApplicationTests {
 
 	@Test
 	void contextLoads() {
+            
 	}
 
 }
