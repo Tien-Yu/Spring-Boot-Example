@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <div th:fragment="btn-logout" sec:authorize="isAuthenticated()">
+            <form action="#" th:action="@{/logout}" method="POST">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <button class="btn btn-block" type="submit" style="font-size: 18px">Logout</button>                    
+            </form>                          
+        </div>   
+    </body>
+</html>

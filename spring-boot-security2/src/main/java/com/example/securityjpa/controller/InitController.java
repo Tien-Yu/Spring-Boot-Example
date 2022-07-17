@@ -5,9 +5,11 @@
 package com.example.securityjpa.controller;
 
 import com.example.securityjpa.model.Users;
+import com.example.securityjpa.model.support.Gender;
 import com.example.securityjpa.service.UsersService;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +31,17 @@ public class InitController {
     public List<Users> findAll() {
         return (List) usersService.findAll();
     }
-
+    
+    @GetMapping("/search")
+    public Users findByUsername(String username){
+        System.out.println(username);
+        Optional<Users> tmpUser = usersService.findByUsername(username);                
+        //500 error code handle not resolved
+        return tmpUser.get();
+    }
+    
     @GetMapping("/init")
-    public String InitUsers() {
+    public List<Users> InitUsers() {
         BCryptPasswordEncoder bp = new BCryptPasswordEncoder();
         
         if (usersService.findByUsername("Timothy").isEmpty()) {            
@@ -40,18 +50,34 @@ public class InitController {
             Users manager = new Users();
             manager.setUsername("Timothy");
             manager.setPassword(bp.encode("timothy"));
+            manager.setGender(Gender.MALE);
             manager.setAuthority(Arrays.asList("admin", "normal", "ROLE_manager"));
 
-            Users employee = new Users();
-            employee.setUsername("Tony");
-            employee.setPassword(bp.encode("tony"));
-            employee.setAuthority(Arrays.asList("normal", "ROLE_employee"));
+            Users employee1 = new Users();
+            employee1.setUsername("Tony");
+            employee1.setPassword(bp.encode("tony"));
+            employee1.setGender(Gender.MALE);
+            employee1.setAuthority(Arrays.asList("normal", "ROLE_employee"));
+            
+            Users employee2 = new Users();
+            employee2.setUsername("Jacky");
+            employee2.setPassword(bp.encode("jacky"));
+            employee2.setGender(Gender.MALE);
+            employee2.setAuthority(Arrays.asList("normal", "ROLE_employee"));
+            
+            Users employee3 = new Users();
+            employee3.setUsername("Karen");
+            employee3.setPassword(bp.encode("karen"));
+            employee3.setGender(Gender.FEMALE);
+            employee3.setAuthority(Arrays.asList("normal", "ROLE_employee"));
             
             usersService.save(manager);
-            usersService.save(employee);
+            usersService.save(employee1);
+            usersService.save(employee2);
+            usersService.save(employee3);
         }
 
-        return "redirect:/api/findAll";
+        return findAll();
     }
 
 }
