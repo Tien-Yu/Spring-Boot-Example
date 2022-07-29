@@ -10,8 +10,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css"/>
         <link rel="stylesheet" th:href="@{/css/dropdown.css}" href="../static/css/dropdown.css"/>
-        <link rel="stylesheet" th:href="@{/css/navbar.css}" href="../static/css/navbar.css"/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/layout.css}" href="../static/css/layout.css"/>        
+        <!-- Font Awesome Icons-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/search.css}" href="../static/css/search.css"/>
         <style>
             body{
                 background-image: url("[[@{/img/background_index.jpg}]]");
@@ -20,41 +22,60 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 background-attachment: fixed;
                 min-width: 1020px;
             }
-/*            .top-nav{
-                padding-top: 30px;
-                padding-bottom: 200px;
-                display: flex;
-                justify-content: space-between;
-                font-size: 20px;
-                color: #cccccc;
-            }
-            .top-nav img{
-                width: 50px;
-            }
-            .navigation{
-                margin-left: 20px;
-                display: flex
-            }
-            .navigation .nav-item{
-                text-decoration: none;
-                color: #000;
-                margin: 10px;
-            }*/
-
         </style>
     </head>
-
     <body>
         <div th:replace="fragments/navbar::top-navbar"></div>        
-        <div class="container">
+        <div class="container" style="padding-top: 200px;">
             <h1>My Company Employee Management System</h1>
             <h3>
                 spring security authorization test
             </h3>
         </div>                
-        
-        
+
+
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.top-nav').addClass('top-nav-adjust');
+                $('.icon').css('color', '#000');
+            });
+        </script>
+        <script>
+            /* Search bar hover function */
+            $('.search-box').hover(function () {
+                $('.search-icon').removeClass('fa fa-search');
+                $('.search-icon').addClass('fa fa-user-circle');
+            }, function () {
+                $('.search-icon').removeClass('fa fa-user-circle');
+                $('.search-icon').addClass('fa fa-search');
+            });
+            /* Search bar focus function */
+            $('.search-input').focusin(function () {
+                $('.search-input').addClass("expand");
+                $('.search-input').attr('placeholder', 'Enter username...');
+                $('.search-icon').css('opacity', 0);
+            });
+            $('.search-input').focusout(function () {
+                $('.search-input').removeClass("expand");
+                $('.search-input').removeAttr('placeholder');
+                $('.search-input').val('');
+                $('.search-icon').css('opacity', '');
+            });
+            
+            /*index hover function*/
+            $('.nav-item').hover(function () {
+                $(this).css('color', '#333333');
+            }, function(){
+                $(this).css('color', '#000');
+            });
+            $('.dropdown').hover(function () {
+                $(this).css('color', '#333333');
+            }, function(){
+                $(this).css('color', '#000');
+            });
+        </script>
+        
     </body>
 </html>

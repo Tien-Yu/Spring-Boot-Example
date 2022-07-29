@@ -58,7 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .logoutUrl("/logout")
 //                    .logoutSuccessUrl("/logoutpage") if this is activated the login page information block will not showed
             );
- 
         //http.csrf().disable();
  
         /**

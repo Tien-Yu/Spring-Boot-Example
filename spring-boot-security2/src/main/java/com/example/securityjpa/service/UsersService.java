@@ -24,13 +24,21 @@ public class UsersService {
     public Iterable<Users> findAll(){
         return usersRepository.findAll();
     }
+    public List<Users> findAllByOrderByUidAsc(){
+        return usersRepository.findAllByOrderByUidAsc();
+    }
+    
+    
+    public Optional<Users> findById(Integer id){
+        return usersRepository.findById(id);
+    }
     
     public Optional<Users> findByUsername(String username) {
         return usersRepository.findByUsername(username);
     }
 
-    public void save(Users users) {
-        usersRepository.save(users);
+    public Users save(Users users) {
+        return usersRepository.save(users);
     }
 
 }

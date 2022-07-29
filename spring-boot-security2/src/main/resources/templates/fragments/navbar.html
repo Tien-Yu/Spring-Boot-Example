@@ -11,22 +11,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css"/>
         <link rel="stylesheet" th:href="@{/css/dropdown.css}" href="../../static/css/dropdown.css"/>
-        <link rel="stylesheet" th:href="@{/css/navbar.css}" href="../../static/css/navbar.css"/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"/>        
+        <link rel="stylesheet" th:href="@{/css/layout.css}" href="../../static/css/layout.css"/>           
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+
     </head>
     <body>
         <div class="top-nav" th:fragment="top-navbar">
             <div class="nav-row">
                 <a th:href="@{/}">
-                    <img alt="icon" src="../static/img/icon.png" th:src="@{/img/icon.png}"/>
+                    <i class="icon fa fa-cog fa-2x fa-spin" aria-hidden="true"></i>      
                 </a>
                 <div class="nav-item">
                     Spring Security
                 </div>
                 <div class="nav-item dropdown">               
-                    Navigation Link
+                    Navigation Link <i class="fa fa-chevron-down" aria-hidden="true"></i>
                     <div class="dropdown-content">
-                        <span style="font-weight: 600">Authority / Role</span>
+                        <span style="font-weight: 600; color: #000">Authority / Role</span>
                         <div class="dropdown-divider"></div>
                         <span style="font-size: 15px; color: gray">admin / manager</span>
                         <a href="#" th:href="@{/admin}">admin page</a>
@@ -42,42 +43,122 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
             </div>
 
             <div style="margin-right:20px; display: flex; align-items: center">
-                <div sec:authorize="!isAuthenticated()">
-                    <form id="search-form" th:action="@{/api/search}" method="get">
-                        <input type="text" name="username" style="height: 50px; border-radius: 5px" placeholder=" Search user..."/>
-                        <button type="submit" style="display: none">submit</button>
+                <div sec:authorize="!isAuthenticated()" class="search-box">
+                    <form th:action="@{/api/search}" method="get">         
+                        <input type="text" class="search-input" name="username" autocomplete="off"/>                            
+                        <button type="submit" style="display: none">Search</button>
+                        <i class="search-icon fa fa-search"></i>
                     </form>                    
                 </div>
                 <div sec:authorize="!isAuthenticated()">
                     <a href="#" th:href="@{/login}" style="text-decoration: none; color: #000; margin: 10px; ">
-                        Sign in
+                        Sign in <i class="fa fa-sign-in" aria-hidden="true"></i>
                     </a> 
                 </div>
                 <div class="dropdown" sec:authorize="isAuthenticated()">
-                    <div sec:authorize="hasRole('manager')">Hello manager ようこそ!</div>
-                    <div sec:authorize="hasRole('employee')">Hello employee ようこそ!</div>
-                    <div class="dropdown-user">
+                    <div sec:authorize="hasRole('manager')" style="font-weight: 600">
+                        Hello manager ようこそ!&nbsp;&nbsp;<i class="fa fa-wrench" aria-hidden="true"></i>
+                    </div>
+                    <div sec:authorize="hasRole('employee')" style="font-weight: 600">
+                        Hello employee ようこそ!&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>           
+                    </div>
+                    <div class="dropdown-user" th:with="username=${#authentication.getName()}">
                         <div>
                             Signed in as <span sec:authentication="name" style="font-weight: 600"></span>
                         </div>
                         <div class="dropdown-divider" style="padding: 0"></div>
-                        <a>123</a>
-                        <a>123</a>
-                        <a>123</a>
+                        <a th:href="@{'/employee/'+${username}}">userpage</a>
+                        <a>link2</a>
+                        <a>link3</a>
                         <div class="dropdown-divider" style="padding: 0"></div>
                         <div th:replace="fragments/logout::btn-logout"></div>
                     </div>
                 </div>
             </div>            
         </div> <!-- End of topbar -->
-        
-        <div th:fragment="left-navbar">
-            
-            
+
+        <!-- side -->
+        <div class='side-nav' th:fragment="side-navbar">
+            <ul>
+                <li>                    
+                    <div class="branch-header" th:with="username=${#authentication.getName()}">                        
+                        <span>
+                            <i class="fa fa-home" aria-hidden="true" style="position: absolute; padding: 5px 0;"></i>
+                            <span style="margin-left: 40px">
+                                <a th:href="@{'/employee/'+${username}}" style="text-decoration: none; color: inherit">Home</a>
+                            </span>
+                        </span>                        
+                    </div>
+                </li>
+                <li>                    
+                    <div class="branch-header">                                                
+                        <span>
+                            <i class="fa fa-user" aria-hidden="true" style="position: absolute; padding: 5px 0;"></i>
+                            <span style="margin-left: 40px">My Account</span>                        
+                        </span>
+                        <i class="btn-toggle fa fa-caret-down"></i>
+                    </div>
+                    <ul class="branch-content">
+                        <li>
+                            <a th:href="@{/user/profile}">View Profile</a>
+                        </li>
+                        <li>Message</li>                        
+                    </ul>
+                </li>
+                <li>
+                    <div class="branch-header">
+                        <span>
+                            <i class="fa fa-database" aria-hidden="true" style="position: absolute; padding: 5px 0;"></i>
+                            <span style="margin-left: 40px">Group Infomation</span>
+                        </span>
+                        <i class="btn-toggle fa fa-caret-down"></i>
+                    </div>
+                    <ul class="branch-content" style="padding: 10px;">
+                        <li>Company</li>
+                        <li>
+                            <a href="#" th:href="@{/group/workers}">Workers</a>                            
+                        </li>
+                        <li>News</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="branch-header">
+                        <span>
+                            <i class="fa fa-history" aria-hidden="true" style="position: absolute; padding: 5px 0;"></i>
+                            <span style="margin-left: 40px">Recent Access</span>                            
+                        </span>
+                        <i class="btn-toggle fa fa-caret-down"></i>
+
+                    </div>
+                    <ul class="branch-content">
+                        <li>My Recent Access History</li>
+                        <li>All Access History</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="branch-header">
+                        <span>
+                            <i class="fa fa-phone" aria-hidden="true" style="position: absolute; padding: 5px 0;"></i>
+                            <span style="margin-left: 40px">Support</span>                            
+                        </span>
+                        <i class="btn-toggle fa fa-caret-down"></i>                        
+                    </div>
+                    <ul class="branch-content">
+                        <li>Contact Us</li>
+                        <li>Privacy & Policy</li>
+                    </ul>
+
+                </li>
+                <li>
+                    <div class="branch-header">
+                        <span style="margin-left: 40px; color: #ffff00">Settings</span>                        
+                    </div>
+                </li>
+            </ul>
         </div>
 
-
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
+        <script th:src="@{/js/bootstrap.min.js}" src="../../static/js/bootstrap.min.js"></script>
+        <script th:src="@{/js/navbar-toggle.js}" src="../../static/js/navbar-toggle.js"></script>
     </body>
 </html>

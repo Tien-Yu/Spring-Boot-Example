@@ -14,7 +14,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <div th:fragment="btn-logout" sec:authorize="isAuthenticated()">
             <form action="#" th:action="@{/logout}" method="POST">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                <button class="btn btn-block" type="submit" style="font-size: 18px">Logout</button>                    
+                <button class="btn btn-block" type="submit" style="font-size: 18px">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Logout
+                </button>                    
             </form>                          
         </div>   
     </body>

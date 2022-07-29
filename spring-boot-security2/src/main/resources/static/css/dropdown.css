@@ -18,10 +18,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     min-width: 240px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    font-size: 18px;    
+    font-size: 18px;
 }
 .dropdown-content span{
-    padding: 12px 16px;    
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
     text-align: left;
@@ -33,6 +33,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     text-decoration: none;
     display: block;
     text-align: left;
+}
+.dropdown-content a:hover {   
+    color: red;    
+}
+.dropdown:hover{
+    color: #cccccc;
 }
 .dropdown:hover .dropdown-content, .dropdown:hover .dropdown-user {
     display: block;
@@ -52,16 +58,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     color: black;
 }
 .dropdown-user div{
-    padding: 12px 16px;    
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
     text-align: left;
 }
 .dropdown-user a{
-    padding: 12px 16px;    
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
     text-align: left;
+}
+
+.dropdown-divider{
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #cccccc;
 }
 
 
