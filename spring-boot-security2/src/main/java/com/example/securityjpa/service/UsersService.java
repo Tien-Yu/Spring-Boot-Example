@@ -24,8 +24,13 @@ public class UsersService {
     public Iterable<Users> findAll(){
         return usersRepository.findAll();
     }
+    
     public List<Users> findAllByOrderByUidAsc(){
         return usersRepository.findAllByOrderByUidAsc();
+    }
+
+    public List<Users>findAllByAccountNonExpriedByOrderByUidAsc(boolean nonExpired){
+        return usersRepository.findAllByAccountNonExpiredOrderByUidAsc(nonExpired);
     }
     
     
@@ -40,5 +45,11 @@ public class UsersService {
     public Users save(Users users) {
         return usersRepository.save(users);
     }
+    
+    //change return the deleted users
+    public void remove(int uid){
+        usersRepository.deleteById(uid);
+    }
+    
 
 }

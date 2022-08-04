@@ -57,7 +57,7 @@ public class ViewController {
     }
     @GetMapping("/group/workers")
     public String workers(Model m){
-        List<Users> usersList = usersService.findAllByOrderByUidAsc();
+        List<Users> usersList = usersService.findAllByAccountNonExpriedByOrderByUidAsc(true);
         List<Users> admin = usersList.stream().filter(o -> o.getRole().equals("manager")).collect(Collectors.toList());
         List<Users> normal = usersList.stream().filter(o -> o.getRole().equals("employee")).collect(Collectors.toList());        
         m.addAttribute("admin", admin);

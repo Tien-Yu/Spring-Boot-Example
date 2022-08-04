@@ -18,4 +18,6 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     public Optional<Users> findByUsername(String username);
     
     public List<Users> findAllByOrderByUidAsc();
+    
+    public List<Users> findAllByAccountNonExpiredOrderByUidAsc(boolean nonExpired);
 }

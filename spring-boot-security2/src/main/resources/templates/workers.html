@@ -45,6 +45,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 <th>Contract</th>
                                 <th>Role</th>
                                 <th>Introduction</th>
+                                <th>#</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,6 +73,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 <td>
                                     <p th:text="${a.introduction}">Introduction</p>
                                 </td>
+                                <td th:with="username=${#authentication.getName()}">
+                                    <button th:if="${a.username != username}">Send Message</button><br/>
+                                    <button th:if="${a.username == username}">Delete</button><br/>                                    
+                                </td>
                             </tr>            
                         </tbody>
                     </table>
@@ -86,6 +91,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 <th>Contract</th>
                                 <th>Role</th>
                                 <th>Introduction</th>
+                                <th>#</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,12 +119,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 <td>
                                     <p th:text="${n.introduction}">Introduction</p>
                                 </td>
+                                <td th:with="username=${#authentication.getName()}">
+                                    <button th:if="${n.username != username}">Send Message</button><br/>
+                                    <button th:if="${n.username == username || #authorization.expression('hasRole(''manager'')') }">Delete</button>                                  
+                                </td>
                             </tr>            
                         </tbody>
                     </table>
 
                 </div>
+                <!-- Users listener -->
+                <div style="margin-top: 50px;">
+                    <h4>Logged in user</h4>
+                    <div>
+                        <a th:href="@{/users/sessionRegistry}" class="btn btn-primary">
+                            sessionRegistry                            
+                        </a>
+                        <a th:href="@{/users/loggedUsers}" class="btn btn-primary">
+                            loggedUsers
+                        </a>
+                    </div>
 
+                </div>
 
             </div>
 

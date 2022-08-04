@@ -16,8 +16,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import lombok.Data;
-
 
 /**
  *
@@ -31,32 +31,44 @@ public class Users implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
     @Column(unique = true, nullable = false, length = 20)
-    private String username;    
+    private String username;
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> authority;
-       
+
     private String nickname;
-    private String phone;    
+    private String phone;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String introduction;
     private String photo;
-    
-    public String photoURI(){
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private boolean accountNonExpired;
+
+    public String photoURI() {
         if (photo == null) {
             return null;
         }
         return "/profile-image/" + uid + "/" + photo;
     }
-    public String getRole(){
+
+    public String getRole() {
         String prefix = "ROLE_";
         String role = authority.stream()
                 .filter(auth -> auth.startsWith(prefix))
                 .map(str -> str.substring(5))
                 .findFirst()
-                .get();        
+                .get();
         return role;
+    }
+
+    @PrePersist
+    private void preInsert() {
+        if (this.accountNonExpired == false) {
+            this.accountNonExpired = true;
+        }
+
     }
 
 }
