@@ -10,11 +10,15 @@
   * spring-boot version 2.6.8
   * reference from : https://youtu.be/n2sH5-Vko1M
 
-* spring-boot-security2
+* spring-boot-security2 (still on process)
   * spring-boot version 2.6.8
   * using spring data jpa
-  * still on process
+  * file upload
+  * rest api
+  * session listener
+  * cropperJs
+  * SweetAlert
+  * ElephantDB
 
 * spring-boot-security3
   * spring-boot version 2.7.0 (WebSecurityConfigurerAdapter deprecated)
-  * still on process
