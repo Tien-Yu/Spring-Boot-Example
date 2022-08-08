@@ -7,6 +7,8 @@ package com.example.securityjpa.model;
 import com.example.securityjpa.model.support.Gender;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import lombok.Data;
 
@@ -46,6 +49,11 @@ public class Users implements Serializable {
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean accountNonExpired;
 
+    //@ElementCollection
+    //@MapKey
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Map<String, Message> messageMap;
+
     public String photoURI() {
         if (photo == null) {
             return null;
@@ -68,7 +76,6 @@ public class Users implements Serializable {
         if (this.accountNonExpired == false) {
             this.accountNonExpired = true;
         }
-
     }
 
 }

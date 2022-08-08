@@ -9,7 +9,11 @@ import com.example.securityjpa.model.Users;
 import com.example.securityjpa.model.support.UsersForm;
 import com.example.securityjpa.service.UsersService;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
@@ -57,6 +61,26 @@ public class UsersController {
         return "redirect:/user/profile";
     }
     
+    @PostMapping("/expiration")
+    public String test(String username, Authentication authentication, HttpServletRequest request){
+        System.out.println("Frontend function success! Target: "+username);
+        System.out.println("Action persion: "+ authentication.getName());
+        
+        //alert user accountNonExpired field with message 
+        
+        if(authentication.getName().equals(username)){
+            //message update?
+            try {                
+                request.logout();
+            } catch (ServletException ex) {
+                Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return "redirect:/group/workers";
+    }
+    
+    //deprecated
     @GetMapping("/delete")
     public String usersDelete(){
         usersService.remove(0);

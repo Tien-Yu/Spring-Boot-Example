@@ -21,35 +21,38 @@ public class UsersService {
     @Autowired
     UsersRepository usersRepository;
 
-    public Iterable<Users> findAll(){
+    public Iterable<Users> findAll() {
         return usersRepository.findAll();
     }
-    
-    public List<Users> findAllByOrderByUidAsc(){
+
+    //deprecated
+    public List<Users> findAllByOrderByUidAsc() {
         return usersRepository.findAllByOrderByUidAsc();
     }
 
-    public List<Users>findAllByAccountNonExpriedByOrderByUidAsc(boolean nonExpired){
+    public List<Users> findAllByAccountNonExpriedByOrderByUidAsc(boolean nonExpired) {
         return usersRepository.findAllByAccountNonExpiredOrderByUidAsc(nonExpired);
     }
-    
-    
-    public Optional<Users> findById(Integer id){
+
+    public Optional<Users> findById(Integer id) {
         return usersRepository.findById(id);
     }
-    
+
     public Optional<Users> findByUsername(String username) {
         return usersRepository.findByUsername(username);
+    }
+    
+    public Optional<Users> findByUsernameAndAccountNonExpired(String username, boolean nonExpired){
+        return usersRepository.findByUsernameAndAccountNonExpired(username, nonExpired);
     }
 
     public Users save(Users users) {
         return usersRepository.save(users);
     }
-    
+
     //change return the deleted users
-    public void remove(int uid){
+    public void remove(int uid) {
         usersRepository.deleteById(uid);
     }
-    
 
 }

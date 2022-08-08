@@ -17,6 +17,9 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     public Optional<Users> findByUsername(String username);
     
+    public Optional<Users> findByUsernameAndAccountNonExpired(String username, boolean nonExpired);
+    
+    //deprecated
     public List<Users> findAllByOrderByUidAsc();
     
     public List<Users> findAllByAccountNonExpiredOrderByUidAsc(boolean nonExpired);

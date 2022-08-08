@@ -4,16 +4,20 @@
  */
 package com.example.securityjpa.controller;
 
+import com.example.securityjpa.model.Message;
 import com.example.securityjpa.model.Users;
 import com.example.securityjpa.model.support.Gender;
 import com.example.securityjpa.service.UsersService;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -103,6 +107,32 @@ public class InitController {
         usersService.save(d2);
 
         return findAll();
+    }
+    
+    @GetMapping("/test_message")
+    @ResponseBody
+    public Users test_msg(){
+        //get user
+        Users u = usersService.findById(1).get();        
+        //get user's message
+        Map<String, Message> msgs = u.getMessageMap();
+        //find spcific message if not fount create new Message object
+        Message msg = msgs.getOrDefault("greeting", new Message());
+        
+        //SetMessage Object information
+        msg.setMessage("Hello Gay!");        
+        msg.setCreatedOn(new Date());
+        msg.setUsers(u);
+        
+        
+        msgs.put("greeting", msg);
+        
+        u.setMessageMap(msgs);
+        u = usersService.save(u);
+        u.getMessageMap().entrySet().stream()
+                .forEach(e -> System.out.println(e.getKey()+" : "+e.getValue().getMessage()));
+        
+        return null;
     }
 
 }

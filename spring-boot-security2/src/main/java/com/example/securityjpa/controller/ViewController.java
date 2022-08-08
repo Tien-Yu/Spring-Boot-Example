@@ -4,6 +4,7 @@
  */
 package com.example.securityjpa.controller;
 
+import com.example.securityjpa.listener.ActiveUserStore;
 import com.example.securityjpa.model.Users;
 import com.example.securityjpa.service.UsersService;
 import java.security.Principal;
@@ -46,12 +47,6 @@ public class ViewController {
     @GetMapping("/user/profile")
     public String user_profile(Model m, Authentication auth){
         Users users = usersService.findByUsername(auth.getName()).get();        
-//        System.out.println(users.getNickname());
-//        System.out.println(users.getPhone());
-//        System.out.println(users.getAuthority());
-//        
-//        System.out.println(auth.getAuthorities());        
-       
         m.addAttribute("users", users);
         return "user_profile";
     }
@@ -61,14 +56,13 @@ public class ViewController {
         List<Users> admin = usersList.stream().filter(o -> o.getRole().equals("manager")).collect(Collectors.toList());
         List<Users> normal = usersList.stream().filter(o -> o.getRole().equals("employee")).collect(Collectors.toList());        
         m.addAttribute("admin", admin);
-        m.addAttribute("normal", normal);
+        m.addAttribute("normal", normal);        
         return "workers";
     }
     
     @GetMapping("/admin")
-    @ResponseBody
     public String adminpage(){
-        return "ADMIN PAGE!";
+        return "admin_mgmt";
     }
     
     @GetMapping("/manager")
@@ -92,11 +86,5 @@ public class ViewController {
     public String index(){
         return "index";
     }
-    
-//    
-//    @GetMapping("logoutpage")
-//    @ResponseBody
-//    public String logoutpage(){
-//        return "You Have been logout";
-//    }
+
 }

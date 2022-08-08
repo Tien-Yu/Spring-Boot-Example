@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Admin | Management</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/dropdown.css}" href="../static/css/dropdown.css"/>
+        <link rel="stylesheet" th:href="@{/css/layout.css}" href="../static/css/layout.css"/>     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+        <style>
+            .table thead tr th{
+                vertical-align: middle;
+                text-align: center;
+            }
+            .table tbody tr td{
+                vertical-align: middle;
+                text-align: center;
+            }
+        </style>
+    </head>    
+    <body>
+        <div th:replace="fragments/navbar::top-navbar"></div>
+
+        <div class="application-main">
+            <div th:replace="fragments/navbar::side-navbar"></div>
+            <div class="main-content">
+                <h3>User Management</h3>
+                <div class="dropdown-divider"></div>
+                <div style="margin-top: 20px;">
+                    <h4>Expired account</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>   
+                                <th>Contract</th>
+                                <th>Role</th>
+                                <th>submission</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width: 100px;">
+                                    <img alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>                                    
+                                </td>
+                                <td>                                   
+                                    <span>Username</span>
+                                </td>
+                                <td>
+                                    <span>Contract</span>
+                                </td>
+                                <td>
+                                    <span>Position</span>
+                                </td>
+                                <td>
+                                    <span>Via administrator(date)</span>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button>Revert</button>
+                                    </a>
+                                    <br/>
+                                    <a>
+                                        <button>delete</button>
+                                    </a>
+                                </td>
+                            </tr>            
+                        </tbody>
+                    </table>
+
+                </div>
+                
+                <div>
+                    <a>
+                        <button>add delete user</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
+        <script th:src="@{/js/navbar-toggle.js}"></script>
+    </body>
+</html>

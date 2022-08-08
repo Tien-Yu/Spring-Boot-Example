@@ -75,7 +75,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 </td>
                                 <td th:with="username=${#authentication.getName()}">
                                     <button th:if="${a.username != username}">Send Message</button><br/>
-                                    <button th:if="${a.username == username}">Delete</button><br/>                                    
+                                    <!--                                    <button th:if="${a.username == username}">Delete</button><br/>                                    -->
+                                    <button th:if="${a.username == username}">SystemCall</button><br/>                                    
+
                                 </td>
                             </tr>            
                         </tbody>
@@ -120,16 +122,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                     <p th:text="${n.introduction}">Introduction</p>
                                 </td>
                                 <td th:with="username=${#authentication.getName()}">
-                                    <button th:if="${n.username != username}">Send Message</button><br/>
-                                    <button th:if="${n.username == username || #authorization.expression('hasRole(''manager'')') }">Delete</button>                                  
+
+                                    <button th:if="${n.username != username}">Send Message</button><br/>                                
+                                    <form th:action="@{/users/expiration}" method="POST"
+                                          th:if="${n.username == username || #authorization.expression('hasRole(''manager'')')}">                                        
+                                        <input type="hidden" name="username" th:value="${n.username}"/>
+                                        <button type="button" class="user-expire-btn">Delete</button>
+                                    </form>                         
                                 </td>
                             </tr>            
                         </tbody>
                     </table>
 
                 </div>
-                <!-- Users listener -->
-                <div style="margin-top: 50px;">
+                <!-- online user listener -->
+                <div style="margin-top: 50px; margin-bottom: 50px;">
                     <h4>Logged in user</h4>
                     <div>
                         <a th:href="@{/users/sessionRegistry}" class="btn btn-primary">
@@ -139,14 +146,68 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                             loggedUsers
                         </a>
                     </div>
-
                 </div>
+            </div> <!-- End of main content -->
 
-            </div>
+        </div> <!-- End of application-main -->
 
-        </div>
-        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
-        <script th:src="@{/js/navbar-toggle.js}"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>        
+        <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>
+        <script th:src="@{/js/navbar-toggle.js}"></script>        
+        <!-- alert function -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script th:inline="javascript">
+            function isOffline(target) {
+                let expirable = true;
+                $.ajax({
+                    type: 'GET',
+                    async: false, //!important
+                    url: '/users/loggedUsers',
+                    success: function (data) {
+                        $.each(data, function (index, onliner) {
+                            if (target === onliner) {
+                                expirable = false;
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert('error calling api');
+                    }
+                });
+                return expirable;
+            }
+
+            $('.user-expire-btn').each(function () {
+                $(this).on('click', function (event) {
+                    let isManagerString = "[[${#authorization.expression('hasRole(''manager'')')}]]";
+                    let isManager = (isManagerString === 'true');
+                    let target = $(this).prev('input').val();
+                    if (isManager) {
+                        if (!isOffline(target)) {
+                            alert('User is still online');
+                            return;
+                        }
+                    }
+                    event.preventDefault();
+                    let form = $(this).parent('form');
+                    swal({
+                        title: "Are you sure?",
+                        text: "This action can not be restored!",
+                        icon: "warning",
+                        buttons: ["Cancel", "Remove"], //[cancel, ok]
+                        dangerMode: true
+                    }).then((removeConfirm) => {
+                        if (removeConfirm) {
+                            swal("Deletion Completed!", "User has been delete!", {
+                                buttons: false,
+                                timer: 3000
+                            }).then(() => {
+                                form.submit();
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
