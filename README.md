@@ -12,7 +12,7 @@
 
 * spring-boot-security2 (still on process)
   * spring-boot version 2.6.8
-  * using spring data jpa
+  * spring data jpa    
   * file upload
   * rest api
   * session listener
