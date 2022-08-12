@@ -29,13 +29,6 @@ public class ViewController {
     @Autowired
     UsersService usersService;
     
-    @GetMapping("/welcome")    
-    public String welcome(Authentication authentication){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-//        String name = authentication.getName();
-        System.out.println("Login-user: "+name);        
-        return "welcome";
-    }
     @GetMapping("/employee/{username}")
     public String userhome(@PathVariable String username, Authentication authentication){
         String authName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -58,11 +51,6 @@ public class ViewController {
         m.addAttribute("admin", admin);
         m.addAttribute("normal", normal);        
         return "workers";
-    }
-    
-    @GetMapping("/admin")
-    public String adminpage(){
-        return "admin_mgmt";
     }
     
     @GetMapping("/manager")

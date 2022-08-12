@@ -4,20 +4,19 @@
  */
 package com.example.securityjpa.controller;
 
-import com.example.securityjpa.model.Message;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.securityjpa.model.Users;
 import com.example.securityjpa.model.support.Gender;
 import com.example.securityjpa.service.UsersService;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,20 +31,23 @@ public class InitController {
     private UsersService usersService;
 
     @GetMapping("/findAll")
-    public List<Users> findAll() {
-        return (List) usersService.findAll();
+    public String findAll() {
+        JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();       
+        return JSON.toJSONString(
+                (List) usersService.findAllByOrderByUidAsc(), new SerializeConfig(true));
     }
 
     @GetMapping("/search")
-    public Users findByUsername(String username) {
+    public String findByUsername(String username) {
         System.out.println(username);
-        Optional<Users> tmpUser = usersService.findByUsername(username);
+        Optional<Users> tmpUser = usersService.findByUsername(username);        
         //500 error code handle not resolved
-        return tmpUser.get();
+        JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();
+        return JSON.toJSONString(tmpUser.get(), new SerializeConfig(true), SerializerFeature.PrettyFormat);
     }
 
     @GetMapping("/init")
-    public List<Users> InitUsers() {
+    public String InitUsers() {
         BCryptPasswordEncoder bp = new BCryptPasswordEncoder();
 
         if (usersService.findByUsername("Timothy").isEmpty()) {
@@ -82,57 +84,4 @@ public class InitController {
         }
         return findAll();
     }
-
-    @GetMapping("/addTestUsers")
-    public List<Users> forDeletion() {
-        if (usersService.findByUsername("Leon").isPresent()
-                || usersService.findByUsername("Ada").isPresent()) {
-            System.out.println("Users already exists!");
-            return findAll();
-        }
-        BCryptPasswordEncoder bp = new BCryptPasswordEncoder();
-        System.out.println("Add Users for deletion");
-        Users d1 = new Users();
-        d1.setUsername("Leon");
-        d1.setPassword(bp.encode("Leon"));
-        d1.setGender(Gender.MALE);
-        d1.setAuthority(Arrays.asList("normal", "ROLE_employee"));
-
-        Users d2 = new Users();
-        d2.setUsername("Ada");
-        d2.setPassword(bp.encode("ada"));
-        d2.setGender(Gender.FEMALE);
-        d2.setAuthority(Arrays.asList("normal", "ROLE_employee"));
-        usersService.save(d1);
-        usersService.save(d2);
-
-        return findAll();
-    }
-    
-    @GetMapping("/test_message")
-    @ResponseBody
-    public Users test_msg(){
-        //get user
-        Users u = usersService.findById(1).get();        
-        //get user's message
-        Map<String, Message> msgs = u.getMessageMap();
-        //find spcific message if not fount create new Message object
-        Message msg = msgs.getOrDefault("greeting", new Message());
-        
-        //SetMessage Object information
-        msg.setMessage("Hello Gay!");        
-        msg.setCreatedOn(new Date());
-        msg.setUsers(u);
-        
-        
-        msgs.put("greeting", msg);
-        
-        u.setMessageMap(msgs);
-        u = usersService.save(u);
-        u.getMessageMap().entrySet().stream()
-                .forEach(e -> System.out.println(e.getKey()+" : "+e.getValue().getMessage()));
-        
-        return null;
-    }
-
 }

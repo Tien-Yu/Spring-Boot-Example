@@ -65,12 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeHttpRequests()                
                 .antMatchers("/css/**", "/fonts/**", "/js/**", "/img/**").permitAll()
-                .antMatchers("/login", "/").permitAll()
-                .antMatchers("/api/addTestUsers").hasAuthority("admin")
+                .antMatchers("/login", "/").permitAll()                
                 .antMatchers("/api/**").permitAll()                                
-                //.antMatchers("/login").permitAll() //set loginpage accessable to anyone(don't have a login-page)
-                //            .antMatchers("/logoutpage").permitAll()
-                .antMatchers("/admin").hasAuthority("admin")
+                .antMatchers("/admin/**").hasAuthority("admin")
                 .antMatchers("/manager").hasRole("manager")
                 .antMatchers("/employee").hasAnyRole("manager", "employee")
                 .anyRequest().authenticated(); //contains /logout      

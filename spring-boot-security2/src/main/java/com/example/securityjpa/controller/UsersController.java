@@ -5,10 +5,14 @@
 package com.example.securityjpa.controller;
 
 import com.example.securityjpa.listener.ActiveUserStore;
+import com.example.securityjpa.model.Message;
 import com.example.securityjpa.model.Users;
+import com.example.securityjpa.model.support.MessageMapKeys;
 import com.example.securityjpa.model.support.UsersForm;
 import com.example.securityjpa.service.UsersService;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -60,31 +64,32 @@ public class UsersController {
 
         return "redirect:/user/profile";
     }
-    
+
     @PostMapping("/expiration")
-    public String test(String username, Authentication authentication, HttpServletRequest request){
-        System.out.println("Frontend function success! Target: "+username);
-        System.out.println("Action persion: "+ authentication.getName());
-        
-        //alert user accountNonExpired field with message 
-        
-        if(authentication.getName().equals(username)){
-            //message update?
-            try {                
+    public String test(String username, Authentication authentication, HttpServletRequest request) {
+        Users user = usersService.findByUsername(username).get();
+        Map<String, Message> messageMap = user.getMessageMap();        
+
+        Message msg = messageMap.getOrDefault(MessageMapKeys.ACCOUNT_EXPIRED_MSG, new Message());
+        msg.setUsers(user);
+        msg.setCreatedOn(new Date());
+        msg.setAddresser("SYSTEM");
+        msg.setMessage("This account has been expired by administrator");
+
+        if (authentication.getName().equals(username)) {
+            try {
                 request.logout();
             } catch (ServletException ex) {
                 Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            msg.setMessage("This account has been expired by user");
         }
-        
-        return "redirect:/group/workers";
-    }
-    
-    //deprecated
-    @GetMapping("/delete")
-    public String usersDelete(){
-        usersService.remove(0);
-        
+        messageMap.put(MessageMapKeys.ACCOUNT_EXPIRED_MSG, msg);
+
+        user.setMessageMap(messageMap);
+        user.setAccountNonExpired(false);
+        usersService.save(user);
+
         return "redirect:/group/workers";
     }
 
@@ -108,7 +113,7 @@ public class UsersController {
                             .stream()
                             .forEach(info -> System.out.println("sessionId: " + info.getSessionId() + ", expired: " + info.isExpired()));
                 });
-        
+
         return sessionRegistry.getAllPrincipals().stream()
                 .filter(u -> !sessionRegistry.getAllSessions(u, false).isEmpty())
                 .map(Object::toString)

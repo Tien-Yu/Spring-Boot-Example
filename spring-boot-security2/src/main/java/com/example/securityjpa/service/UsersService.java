@@ -25,7 +25,6 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
-    //deprecated
     public List<Users> findAllByOrderByUidAsc() {
         return usersRepository.findAllByOrderByUidAsc();
     }
@@ -51,8 +50,8 @@ public class UsersService {
     }
 
     //change return the deleted users
-    public void remove(int uid) {
-        usersRepository.deleteById(uid);
+    public void delete(Users users) {
+        usersRepository.delete(users);
     }
 
 }
