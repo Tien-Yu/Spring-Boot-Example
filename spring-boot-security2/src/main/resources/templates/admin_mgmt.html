@@ -33,41 +33,46 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 <div class="dropdown-divider"></div>
                 <div style="margin-top: 20px;">
                     <h4>Expired account</h4>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" th:if="${!expiredList.empty}">
                         <thead>
                             <tr>
                                 <th>Photo</th>
                                 <th>Name</th>   
                                 <th>Contract</th>
                                 <th>Role</th>
-                                <th>submission</th>
+                                <th>Notification</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr th:each="exuser : ${expiredList}">
                                 <td style="width: 100px;">
-                                    <img alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>                                    
+                                    <img th:if="${exuser.photo != 'profile.png'}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
+                                    <img th:if="${exuser.photo == 'profile.png'}" alt="photo" src="" th:src="@{${n.photoURI()}}" style="width: 100px"/>                                    
                                 </td>
                                 <td>                                   
-                                    <span>Username</span>
+                                    <span th:text="${exuser.username}">Username</span>
                                 </td>
                                 <td>
-                                    <span>Contract</span>
+                                    <span th:text="${exuser.phone}">Contract</span>
                                 </td>
                                 <td>
-                                    <span>Position</span>
+                                    <span th:text="${exuser.getRole()}">Position</span>
                                 </td>
-                                <td>
-                                    <span>Via administrator(date)</span>
+                                <td th:with="msg=${exuser.messageMap.get('ACCOUNT_EXPIRED_MSG')}" style="text-align: left">
+                                    
+                                    <span>Message: [[${msg.message}]]</span><br/>
+                                    <span>Addresser: [[${msg.addresser}]]</span><br/>
+                                    <span th:text="'Expiration date: '+${#dates.format(msg.createdOn, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
+                                    
                                 </td>
                                 <td>
                                     <a>
-                                        <button>Revert</button>
+                                        Revert
                                     </a>
                                     <br/>
                                     <a>
-                                        <button>delete</button>
+                                        delete
                                     </a>
                                 </td>
                             </tr>            
@@ -81,6 +86,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <button>add delete user</button>
                     </a>
                 </div>
+                
+                <div th:if="${expiredList.empty}">no account expired</div>
             </div>
         </div>
 

@@ -45,6 +45,11 @@ body{
     text-decoration: none;
     margin: 30px;
 }
+.nav-item a{
+    color: inherit;
+    text-decoration: inherit;
+}
+
 .nav-item:hover{
     color: #cccccc;
 }

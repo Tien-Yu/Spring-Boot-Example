@@ -26,16 +26,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     display: block;
     text-align: left;
 }
-.dropdown-content a {
+.dropdown-content a{
     float: none;
-    color: black;
+    color: #000 !important;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
     text-align: left;
 }
-.dropdown-content a:hover {   
-    color: red;    
+.dropdown-content a:hover {
+    color: red !important;
 }
 .dropdown:hover{
     color: #cccccc;
