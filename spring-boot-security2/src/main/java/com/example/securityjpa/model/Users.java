@@ -51,7 +51,7 @@ public class Users implements Serializable {
 
     //@ElementCollection
     //@MapKey
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Map<String, Message> messageMap;
 
     public String photoURI() {
