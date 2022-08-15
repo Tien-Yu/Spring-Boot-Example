@@ -12,7 +12,6 @@ import com.example.securityjpa.model.support.Gender;
 import com.example.securityjpa.service.UsersService;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,16 +33,16 @@ public class InitController {
     public String findAll() {
         JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();       
         return JSON.toJSONString(
-                (List) usersService.findAllByOrderByUidAsc(), new SerializeConfig(true));
+                (List) usersService.findAllByOrderByUidAsc(), new SerializeConfig(true), SerializerFeature.PrettyFormat);
     }
 
     @GetMapping("/search")
     public String findByUsername(String username) {
-        System.out.println(username);
-        Optional<Users> tmpUser = usersService.findByUsername(username);        
+        System.out.println(username);        
+        Users user = usersService.findByUsername(username).get();          
         //500 error code handle not resolved
         JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();
-        return JSON.toJSONString(tmpUser.get(), new SerializeConfig(true), SerializerFeature.PrettyFormat);
+        return JSON.toJSONString(user, new SerializeConfig(true), SerializerFeature.PrettyFormat);
     }
 
     @GetMapping("/init")

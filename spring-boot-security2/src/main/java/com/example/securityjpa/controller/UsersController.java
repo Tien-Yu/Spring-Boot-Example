@@ -74,7 +74,7 @@ public class UsersController {
         msg.setUsers(user);
         msg.setCreatedOn(new Date());
         msg.setAddresser("SYSTEM");
-        msg.setMessage("This account has been expired by administrator");
+        msg.setMessage("This account has been expired by administrator");               
 
         if (authentication.getName().equals(username)) {
             try {
@@ -83,7 +83,7 @@ public class UsersController {
                 Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
             }
             msg.setMessage("This account has been expired by user");
-        }
+        }        
         messageMap.put(MessageMapKeys.ACCOUNT_EXPIRED_MSG, msg);
 
         user.setMessageMap(messageMap);

@@ -8,6 +8,12 @@ import com.example.securityjpa.model.Users;
 import com.example.securityjpa.model.support.Gender;
 import com.example.securityjpa.model.support.MessageMapKeys;
 import com.example.securityjpa.service.UsersService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -35,24 +42,54 @@ public class AdminController {
         return "admin_mgmt";
     }
 
-    //Test action 1
-    //revert expired user (remove key in messageMap) GET or POST
+    //map object remove() will not persist out of this method
+    @PostMapping("revertExpired")
     public String revert_expired(String username) {
         Users user = usersService.findByUsername(username).get();
         user.setAccountNonExpired(true);
         user.getMessageMap().remove(MessageMapKeys.ACCOUNT_EXPIRED_MSG);
-        usersService.save(user);  //does it really remove message in the database
-
+        usersService.save(user);   //trigger orphanRemoval    
+        System.out.println("Account " + username + " has been revert form expiration!");
         return "redirect:/admin";
     }
 
-    //Test action 2
-    //delete expired user (test cascade with message) GET or POST
-    public String delete_expired(String username) {
+    @PostMapping("deleteExpired")
+    public String delete_expired(String username) throws IOException {
         Users user = usersService.findByUsername(username).get();
-        usersService.delete(user);
 
+        String dir = "./profile-image/" + user.getUid();
+        Path dirPath = Paths.get(dir);
+        File file = dirPath.toFile();
+
+        if (Files.exists(dirPath, LinkOption.NOFOLLOW_LINKS)) {
+            clearAndDeleteDirectory_alter(file);
+            //FileSystemUtils.deleteRecursively(dirPath); //simple way
+
+        }
+        usersService.delete(user);
         return "redirect:/admin";
+    }
+
+    void clearAndDeleteDirectory(File directoryToBeDeleted) {
+        //return null if not directory
+        //if directory is empty, allContents length = 0
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                clearAndDeleteDirectory(file);
+            }
+        }
+        directoryToBeDeleted.delete();
+    }
+
+    void clearAndDeleteDirectory_alter(File directoryToBeDeleted) {
+        for (File file : directoryToBeDeleted.listFiles()) {
+            if (file.isDirectory()) {
+                clearAndDeleteDirectory_alter(file);
+            }
+            file.delete();
+        }
+        directoryToBeDeleted.delete();
     }
 
     @GetMapping("/addTestUsers")
@@ -66,7 +103,7 @@ public class AdminController {
         System.out.println("Add Users for deletion");
         Users d1 = new Users();
         d1.setUsername("Leon");
-        d1.setPassword(bp.encode("Leon"));
+        d1.setPassword(bp.encode("leon"));
         d1.setGender(Gender.MALE);
         d1.setAuthority(Arrays.asList("normal", "ROLE_employee"));
 
