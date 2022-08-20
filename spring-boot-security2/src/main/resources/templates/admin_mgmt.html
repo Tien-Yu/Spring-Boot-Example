@@ -21,6 +21,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 vertical-align: middle;
                 text-align: center;
             }
+            .btn-restore-user{
+                width: 75px;
+            }
+            .btn-delete-user{
+                width: 75px;
+            }
         </style>
     </head>    
     <body>
@@ -48,7 +54,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                             <tr th:each="exuser : ${expiredList}">
                                 <td style="width: 100px;">
                                     <img th:if="${exuser.photo != 'profile.png'}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
-                                    <img th:if="${exuser.photo == 'profile.png'}" alt="photo" src="" th:src="@{${n.photoURI()}}" style="width: 100px"/>                                    
+                                    <img th:if="${exuser.photo == 'profile.png'}" alt="photo" src="" th:src="@{${exuser.photoURI()}}" style="width: 100px"/>                                    
                                 </td>
                                 <td>                                   
                                     <span th:text="${exuser.username}">Username</span>
@@ -66,14 +72,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                     <span th:text="'Expiration date: '+${#dates.format(msg.createdOn, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
                                     
                                 </td>
-                                <td>
-                                    <a>
-                                        Revert
-                                    </a>
-                                    <br/>
-                                    <a>
-                                        delete
-                                    </a>
+                                <td>   
+                                    <form th:action="@{/admin/revertExpired}" method="post">
+                                        <input type="hidden" name="username" th:value="${exuser.username}"/>
+                                        <button type="submit" class="btn btn-success btn-restore-user">Restore</button>
+                                    </form>
+                    
+                                    <form th:action="@{/admin/deleteExpired}" method="post">
+                                        <input type="hidden" name="username" th:value="${exuser.username}"/>
+                                        <button type="button" class="btn btn-danger btn-delete-user">Delete</button>
+                                    </form>
                                 </td>
                             </tr>            
                         </tbody>
@@ -82,12 +90,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 </div>
                 
                 <div>
-                    <a>
-                        <button>add delete user</button>
+                    <a th:href="@{/admin/addTestUsers}" class="btn btn-primary">
+                        Add Test user
                     </a>
                 </div>
                 
                 <div th:if="${expiredList.empty}">no account expired</div>
+                
             </div>
         </div>
 
@@ -95,5 +104,59 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
         <script th:src="@{/js/navbar-toggle.js}"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script th:inline="javascript">            
+            $('.btn-restore-user').each(function () {
+                $(this).on('click', function (event) {                                       
+                    event.preventDefault();
+                    let form = $(this).parent('form');
+                    swal({
+                        title: "Restore account?",
+                        text: " ",
+                        icon: "info",
+                        buttons: ["Cancel", "Restore"],
+                        dangerMode: false
+                    }).then((removeConfirm) => {
+                        if (removeConfirm) {                            
+                            swal({
+                                title: "Success!",
+                                text: "Account has been restored.",
+                                icon: "success",
+                                buttons: false,
+                                timer: 3000
+                            }).then(() => {
+                                form.submit();
+                            });
+                        }
+                    });
+                });
+            });
+            
+            $('.btn-delete-user').each(function () {
+                $(this).on('click', function (event) {                                       
+                    event.preventDefault();
+                    let form = $(this).parent('form');
+                    swal({
+                        title: "Please confirm!",
+                        text: "User account will be delete completely.",
+                        icon: "warning",
+                        buttons: ["Cancel", "Delete"], //[cancel, ok]
+                        dangerMode: true
+                    }).then((removeConfirm) => {
+                        if (removeConfirm) {
+                            swal({
+                                title: "Deletion Success!",
+                                text: "Account information has been removed from database",
+                                icon: "success",
+                                buttons: false,
+                                timer: 3000
+                            }).then(() => {
+                                form.submit();
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

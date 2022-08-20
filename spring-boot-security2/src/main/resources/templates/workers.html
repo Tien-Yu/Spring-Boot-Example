@@ -22,6 +22,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 vertical-align: middle;
                 text-align: center;
             }
+            .btn-send-message{
+                width: 120px;
+            }
+            .btn-expire-user{
+                width: 120px;
+            }
         </style>
     </head>
 
@@ -74,9 +80,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                     <p th:text="${a.introduction}">Introduction</p>
                                 </td>
                                 <td th:with="username=${#authentication.getName()}">
-                                    <button th:if="${a.username != username}">Send Message</button><br/>
-                                    <!--                                    <button th:if="${a.username == username}">Delete</button><br/>                                    -->
-                                    <button th:if="${a.username == username}">SystemCall</button><br/>                                    
+                                    <button class="btn btn-info btn-send-message" th:if="${a.username != username}">Send Message</button><br/>
+
+                                    <a class="btn btn-default" th:if="${a.username == username}" th:href="@{/admin}" style="width: 120px">SystemCall</a><br/>                                    
 
                                 </td>
                             </tr>            
@@ -123,11 +129,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 </td>
                                 <td th:with="username=${#authentication.getName()}">
 
-                                    <button th:if="${n.username != username}">Send Message</button><br/>                                
+                                    <button th:if="${n.username != username}" class="btn btn-info btn-send-message">Send Message</button><br/>                                
                                     <form th:action="@{/users/expiration}" method="POST"
                                           th:if="${n.username == username || #authorization.expression('hasRole(''manager'')')}">                                        
                                         <input type="hidden" name="username" th:value="${n.username}"/>
-                                        <button type="button" class="user-expire-btn">Delete</button>
+                                        <button type="button" class="btn btn-warning btn-expire-user">Discard</button>
                                     </form>                         
                                 </td>
                             </tr>            
@@ -177,7 +183,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 return expirable;
             }
 
-            $('.user-expire-btn').each(function () {
+            $('.btn-expire-user').each(function () {
                 $(this).on('click', function (event) {
                     let isManagerString = "[[${#authorization.expression('hasRole(''manager'')')}]]";
                     let isManager = (isManagerString === 'true');
@@ -192,13 +198,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     let form = $(this).parent('form');
                     swal({
                         title: "Are you sure?",
-                        text: "This action can not be restored!",
-                        icon: "warning",
-                        buttons: ["Cancel", "Remove"], //[cancel, ok]
+                        text: "This account will be expired, Please be certain.",
+                        icon: "warning",                 
+                        buttons: ["Cancel", "Discard"], //default is [cancel, ok]                        
                         dangerMode: true
                     }).then((removeConfirm) => {
                         if (removeConfirm) {
-                            swal("Deletion Success!", "account has now been expired!", {
+                            swal("Success!", "Account has now been expired.", {
                                 buttons: false,
                                 timer: 3000
                             }).then(() => {
