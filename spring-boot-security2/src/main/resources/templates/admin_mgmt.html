@@ -39,6 +39,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 <div class="dropdown-divider"></div>
                 <div style="margin-top: 20px;">
                     <h4>Expired account</h4>
+
+                    <div th:if="${expiredList.empty}">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Photo</th>
+                                    <th>Name</th>   
+                                    <th>Contract</th>
+                                    <th>Role</th>
+                                    <th>Notification</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <h1 style="text-align: center; font-family: monospace; color: #999999; background-color: #e5e5e5">
+                            No user's account has expired
+                        </h1>
+                    
+                    </div>
+
                     <table class="table table-bordered" th:if="${!expiredList.empty}">
                         <thead>
                             <tr>
@@ -53,8 +73,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <tbody>
                             <tr th:each="exuser : ${expiredList}">
                                 <td style="width: 100px;">
-                                    <img th:if="${exuser.photo != 'profile.png'}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
-                                    <img th:if="${exuser.photo == 'profile.png'}" alt="photo" src="" th:src="@{${exuser.photoURI()}}" style="width: 100px"/>                                    
+                                    <img th:if="${!exuser.localPathExists}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
+                                    <img th:if="${exuser.localPathExists}" alt="photo" src="" th:src="@{${exuser.photoURI()}}" style="width: 100px"/>                                    
                                 </td>
                                 <td>                                   
                                     <span th:text="${exuser.username}">Username</span>
@@ -66,18 +86,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                     <span th:text="${exuser.getRole()}">Position</span>
                                 </td>
                                 <td th:with="msg=${exuser.messageMap.get('ACCOUNT_EXPIRED_MSG')}" style="text-align: left">
-                                    
+
                                     <span>Message: [[${msg.message}]]</span><br/>
                                     <span>Addresser: [[${msg.addresser}]]</span><br/>
                                     <span th:text="'Expiration date: '+${#dates.format(msg.createdOn, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
-                                    
+
                                 </td>
                                 <td>   
                                     <form th:action="@{/admin/revertExpired}" method="post">
                                         <input type="hidden" name="username" th:value="${exuser.username}"/>
                                         <button type="submit" class="btn btn-success btn-restore-user">Restore</button>
                                     </form>
-                    
+
                                     <form th:action="@{/admin/deleteExpired}" method="post">
                                         <input type="hidden" name="username" th:value="${exuser.username}"/>
                                         <button type="button" class="btn btn-danger btn-delete-user">Delete</button>
@@ -88,15 +108,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     </table>
 
                 </div>
-                
-                <div>
-                    <a th:href="@{/admin/addTestUsers}" class="btn btn-primary">
-                        Add Test user
-                    </a>
+
+                <div style="margin-top: 100px">
+                    <h4>アカウント名LeonとAdaは下のボタンを押して追加できます</h4>
+                    <p>
+                        条件：アカウント名LeonとAdaはどれか一つデリートされなかったらこのファンクションは無効です
+                    </p>
+                    <button type="button" id="addTestUsers" class="btn btn-default">
+                        Add Leon & Ada
+                    </button>
                 </div>
-                
-                <div th:if="${expiredList.empty}">no account expired</div>
-                
+
+
+
             </div>
         </div>
 
@@ -105,9 +129,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
         <script th:src="@{/js/navbar-toggle.js}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script th:inline="javascript">            
+        <script th:inline="javascript">
+            $('#addTestUsers').on('click', function () {
+                $.ajax({
+                    method: "GET",
+                    url: "/admin/addTestUsers",
+                    success: function (response) {
+                        if (response.status === 200)
+                            alert(response.responseText);
+                    },
+                    error: function (response) {
+                        if (response.status === 400) {
+                            alert(response.responseText);
+                        } else {
+                            alert('Server error occured!');
+                        }
+                    }
+                });
+            });
+
             $('.btn-restore-user').each(function () {
-                $(this).on('click', function (event) {                                       
+                $(this).on('click', function (event) {
                     event.preventDefault();
                     let form = $(this).parent('form');
                     swal({
@@ -117,7 +159,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         buttons: ["Cancel", "Restore"],
                         dangerMode: false
                     }).then((removeConfirm) => {
-                        if (removeConfirm) {                            
+                        if (removeConfirm) {
                             swal({
                                 title: "Success!",
                                 text: "Account has been restored.",
@@ -131,9 +173,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     });
                 });
             });
-            
+
             $('.btn-delete-user').each(function () {
-                $(this).on('click', function (event) {                                       
+                $(this).on('click', function (event) {
                     event.preventDefault();
                     let form = $(this).parent('form');
                     swal({

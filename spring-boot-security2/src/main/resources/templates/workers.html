@@ -57,8 +57,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <tbody>
                             <tr th:each="a : ${admin}">
                                 <td style="width: 100px;">
-                                    <img th:if="${a.photo != 'profile.png'}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
-                                    <img th:if="${a.photo == 'profile.png'}" alt="photo" src="" th:src="@{${a.photoURI()}}" style="width: 100px"/>
+                                    <img th:if="${!a.localPathExists}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
+                                    <img th:if="${a.localPathExists}" alt="photo" src="" th:src="@{${a.photoURI()}}" style="width: 100px"/>
                                 </td>
                                 <td>
                                     <span th:if="${a.nickname != null}">
@@ -82,7 +82,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                                 <td th:with="username=${#authentication.getName()}">
                                     <button class="btn btn-info btn-send-message" th:if="${a.username != username}">Send Message</button><br/>
 
-                                    <a class="btn btn-default" th:if="${a.username == username}" th:href="@{/admin}" style="width: 120px">SystemCall</a><br/>                                    
+                                    <a class="btn btn-default" th:if="${a.username == username}" th:href="@{/admin}" style="width: 120px">Management</a><br/>                                    
 
                                 </td>
                             </tr>            
@@ -105,8 +105,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <tbody>
                             <tr th:each="n : ${normal}">
                                 <td style="width: 100px;">
-                                    <img th:if="${n.photo != 'profile.png'}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
-                                    <img th:if="${n.photo == 'profile.png'}" alt="photo" src="" th:src="@{${n.photoURI()}}" style="width: 100px"/>
+                                    <img th:if="${!n.localPathExists}" alt="photo" src="" th:src="@{/img/profile_icon.jpg}" style="width: 100px"/>
+                                    <img th:if="${n.localPathExists}" alt="photo" src="" th:src="@{${n.photoURI()}}" style="width: 100px"/>
                                 </td>
                                 <td>
                                     <span th:if="${n.nickname != null}">
@@ -143,7 +143,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 </div>
                 <!-- online user listener -->
                 <div style="margin-top: 50px; margin-bottom: 50px;">
-                    <h4>Logged in user</h4>
+                    <h4>Logged in user :</h4>
                     <div>
                         <a th:href="@{/users/sessionRegistry}" class="btn btn-primary">
                             sessionRegistry                            

@@ -24,8 +24,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 <div class="nav-item">
                     Spring Security
                 </div>
-                <div class="nav-item dropdown">               
-                    Navigation Link&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i>
+                <div class="nav-item dropdown">
+                    <div style="display: flex; align-items: baseline;">
+                        <span>Navigation Link</span>&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i>
+                    </div>                    
                     <div class="dropdown-content">
                         <span style="font-weight: 600; color: #000">Authority / Role</span>
                         <div class="dropdown-divider"></div>
@@ -35,7 +37,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <div class="dropdown-divider"></div>
                         <span style="font-size: 15px; color: gray">normal / employee</span> 
                         <a href="#" th:href="@{/employee}">employee page</a>
-                        <a href="#">link4</a>
+                        <a href="#" th:href="@{/}">public page</a>
                     </div>
                 </div>
                 <div class=" nav-item">
@@ -69,10 +71,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <div>
                             Signed in as <span sec:authentication="name" style="font-weight: 600"></span>
                         </div>
+                        <div class="dropdown-divider" style="padding: 0"></div>                        
+                        <a th:href="@{/user/profile}">Your profile</a>
+                        <a>Your Message</a>
                         <div class="dropdown-divider" style="padding: 0"></div>
-                        <a th:href="@{'/employee/'+${username}}">userpage</a>
-                        <a>link2</a>
-                        <a>link3</a>
+                        <a th:href="@{'/employee/'+${username}}">Home</a>
+                        <a>History</a>
+                        <a>Help</a>
+                        <a>Settings</a>
                         <div class="dropdown-divider" style="padding: 0"></div>
                         <div th:replace="fragments/logout::btn-logout"></div>
                     </div>
