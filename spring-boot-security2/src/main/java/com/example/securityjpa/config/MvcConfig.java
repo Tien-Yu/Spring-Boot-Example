@@ -17,10 +17,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer{
 
-    /*allow access to the directory in file system to the client*/
+    /*allow client to access the directory in file system*/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // project root : localhost:8080/profile-image
+        // access image using : localhost:8080/profile-image
         Path profileImageUploadDir = Paths.get("./profile-image"); 
         // file:///D:/~projectName/profile-image
         String profileImageUploadPath = profileImageUploadDir.toFile().getAbsolutePath(); 

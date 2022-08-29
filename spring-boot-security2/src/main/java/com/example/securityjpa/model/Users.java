@@ -6,6 +6,9 @@ package com.example.securityjpa.model;
 
 import com.example.securityjpa.model.support.Gender;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.CascadeType;
@@ -59,6 +62,11 @@ public class Users implements Serializable {
             return null;
         }
         return "/profile-image/" + uid + "/" + photo;
+    }
+    
+    public boolean localPathExists(){
+        Path path = Paths.get("./profile-image/" + uid + "/" + photo);
+        return Files.exists(path);
     }
 
     public String getRole() {
