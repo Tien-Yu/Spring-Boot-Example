@@ -12,6 +12,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <!--online resources-->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"/>
         <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet"/>
         <style th:inline="text">
             body{
                 background-image: url("[[@{/img/background_login.jpg}]]");
@@ -25,27 +26,46 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         </style>
     </head>
     <body>
-        <div class="container" style="margin-top: 300px;">
-            <form class="form-signin" method="post" action="/login">
-                <h2 class="form-signin-heading">Please sign in</h2>
+        <div class="container" style="margin-top: 200px;">
+            <div style="max-width: 450px; margin: 0 auto; background-color: #fff; border-radius: 1%;">
+                <form class="form-signin" method="post" action="/login">
+                    <h2 class="form-signin-heading" style="margin-top: 20px">Please sign in</h2>
 
-                <div class="alert alert-danger text-center" th:if="${param.failed}">Wrong username or password</div>
-                <div class="alert alert-success text-center" th:if="${param.logout}">You have been logged out</div>
+                    <div class="alert alert-danger text-center" th:if="${param.failed}">Wrong username or password</div>
+                    <div class="alert alert-warning text-center" th:if="${param.denied}">Server denied your access</div>
+                    <div class="alert alert-success text-center" th:if="${param.logout}">You have been logged out</div>
 
-                <p>
-                    <label for="username" class="sr-only">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="" />
-                </p>
-                <p>
-                    <label for="password" class="sr-only">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="" />
-                </p>
-                <p style="font-size: 15px">
-                    <input type="checkbox" name="remember-me"/> Remember me on this computer.                
-                </p>                
-                <input name="_csrf" type="hidden" th:value="${_csrf.token}" />
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            </form>
+                    <p>
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="" />
+                    </p>
+                    <p>
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="" />
+                    </p>
+                    <p style="font-size: 15px">
+                        <input type="checkbox" name="remember-me"/> Remember me on this computer.                
+                    </p>                
+                    <input name="_csrf" type="hidden" th:value="${_csrf.token}" />
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+                    <div class="text-center" style="margin-top: 15px; margin-bottom: 15px">
+                        or
+                    </div>
+
+                    <div style="margin-bottom: 20px">
+                        <a class="btn btn-lg btn-default text-center" th:href="@{/oauth2/authorization/google}" style="width: 300px; border: 1px solid">
+                            <i class="fa-brands fa-google"></i>
+                            &nbsp;
+                            <span>Sign in with Google</span>                
+                        </a>
+                    </div>
+
+
+                </form>
+
+            </div>
+
         </div>
 
 

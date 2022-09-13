@@ -38,6 +38,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <span style="font-size: 15px; color: gray">normal / employee</span> 
                         <a href="#" th:href="@{/employee}">employee page</a>
                         <a href="#" th:href="@{/}">public page</a>
+                        
+                        <div th:replace="fragments/logout::btn-logout"></div>
                     </div>
                 </div>
                 <div class=" nav-item">
@@ -65,6 +67,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     </div>
                     <div sec:authorize="hasRole('employee')" style="font-weight: 600">
                         Hello employee ようこそ!&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>           
+                    </div>
+                    <div sec:authorize="hasRole('USER')" style="font-weight: 600">
+                        Hello USER ようこそ!&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>           
                     </div>
                     
                     <div class="dropdown-user" th:with="username=${#authentication.getName()}">
@@ -127,7 +132,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         <li>
                             <a href="#" th:href="@{/group/workers}">Workers</a>                            
                         </li>
-                        <li>News</li>
+                        <li>
+                            <a href="#" th:href="@{/group/others}">Others</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
