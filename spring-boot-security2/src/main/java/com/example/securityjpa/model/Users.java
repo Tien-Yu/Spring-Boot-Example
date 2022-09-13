@@ -4,6 +4,7 @@
  */
 package com.example.securityjpa.model;
 
+import com.example.securityjpa.model.support.AuthenticationProvider;
 import com.example.securityjpa.model.support.Gender;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -56,6 +57,11 @@ public class Users implements Serializable {
     //@MapKey
     @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Map<String, Message> messageMap;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProvider authProvider;
+    
 
     public String photoURI() {
         if (photo == null) {

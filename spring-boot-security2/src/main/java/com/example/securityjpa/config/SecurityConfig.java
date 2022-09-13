@@ -6,7 +6,9 @@ package com.example.securityjpa.config;
 
 import com.example.securityjpa.handle.LoginSuccessHandler;
 import com.example.securityjpa.handle.LogoutSuccessHandlerImpl;
+import com.example.securityjpa.handle.OAuth2LoginSuccessHandler;
 import com.example.securityjpa.listener.ActiveUserStore;
+import com.example.securityjpa.oauth.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,23 +54,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http.formLogin()
                 .loginProcessingUrl("/login")
-                .loginPage("/login") //set login-page url(index.html)
+                .loginPage("/login") //set login-page url(index.html)                
                 .successHandler(getAuthenticationSuccessHandler())
                 .failureUrl("/login?failed")
-                //            .failureForwardUrl("/login?failed")                
+                //                .failureForwardUrl("/login?failed")  POST needed              
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint().userService(oAuth2UserService)
+                .and()
+                .successHandler(getOAuth2LoginSuccessHandler())
+                .failureUrl("/login?denied")               
                 .and()
                 .rememberMe()
                 .and()
-                .logout(logout -> logout
-                .deleteCookies("JSESSIONID") //default logout method will delete JSESSIONID, remember-me                   
-                .logoutUrl("/logout")
-                .logoutSuccessHandler(getLogoutSuccessHanlder())
-                );
+                .logout(logout -> logout.deleteCookies("JSESSIONID") //default logout method will delete JSESSIONID, remember-me                   
+                                        .logoutUrl("/logout")
+                                        .logoutSuccessHandler(getLogoutSuccessHandler()));
 
-        http.authorizeHttpRequests()                
+        http.authorizeHttpRequests()
+                .antMatchers("/oath2/**").permitAll()
                 .antMatchers("/css/**", "/fonts/**", "/js/**", "/img/**").permitAll()
-                .antMatchers("/login", "/").permitAll()                
-                .antMatchers("/api/**").permitAll()                                
+                .antMatchers("/login", "/").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("admin")
                 .antMatchers("/manager").hasRole("manager")
                 .antMatchers("/employee").hasAnyRole("manager", "employee")
@@ -103,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public LogoutSuccessHandler getLogoutSuccessHanlder() {
+    public LogoutSuccessHandler getLogoutSuccessHandler() {
         return new LogoutSuccessHandlerImpl();
     }
 
@@ -116,6 +126,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
-    }    
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler getOAuth2LoginSuccessHandler() {
+        return new OAuth2LoginSuccessHandler();
+    }
 
 }

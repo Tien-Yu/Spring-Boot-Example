@@ -25,7 +25,7 @@ public class MvcConfig implements WebMvcConfigurer{
         // file:///D:/~projectName/profile-image
         String profileImageUploadPath = profileImageUploadDir.toFile().getAbsolutePath(); 
         // easily access files under /profile-image by url /profile-image
-        registry.addResourceHandler("/profile-image/**").addResourceLocations("file:/" + profileImageUploadPath + "/");      
+        registry.addResourceHandler("/profile-image/**").addResourceLocations("file:" + profileImageUploadPath + "/");      
     }
     
 }

@@ -4,6 +4,7 @@
  */
 package com.example.securityjpa.handle;
 
+import com.example.securityjpa.oauth.CustomOAuth2User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,12 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("logged out user: " + authentication.getName());
+        if(authentication.getPrincipal() instanceof CustomOAuth2User){            
+            System.out.println("logged out user: " + ((CustomOAuth2User) authentication.getPrincipal()).getEmail());
+        }else{
+            System.out.println("logged out user: " + authentication.getName());        
+        }
+        
         HttpSession session = request.getSession();
         if (session != null) {
             session.removeAttribute("user");
@@ -34,7 +40,9 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
         sessionRegistry.getAllSessions(authentication.getPrincipal(), false)
                 .stream()
                 .forEach(i -> i.expireNow());
-
+        
+        
+        
         response.sendRedirect("/login?logout");
 
     }
