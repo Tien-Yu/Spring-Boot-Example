@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);    
+        auth.userDetailsService(userDetailsService);     
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http.formLogin()
                 .loginProcessingUrl("/login")
-                .loginPage("/login") //set login-page url(index.html)               
+                .loginPage("/login") //set login-page url(index.html)                
                 .successHandler(getAuthenticationSuccessHandler())
                 .failureUrl("/login?failed")
                 //                .failureForwardUrl("/login?failed")  POST needed              

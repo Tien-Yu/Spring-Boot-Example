@@ -24,14 +24,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         </style>
     </head>
     <body>
-        <div th:replace="fragments/navbar::top-navbar"></div>
-        
-        <div class="container" style="padding-top: 200px;">
-            <h1>My Company Employee Management System</h1>
-            <h3>
-                spring security authorization test
-            </h3>
-        </div>                
+        <!--<div class="container">-->
+            <div th:replace="fragments/navbar::top-navbar"></div>
+
+            <div class="container" style="padding-top: 200px;">
+                <h1>My Company Employee Management System</h1>
+                <h3>
+                    spring security authorization test
+                </h3>
+            </div>                
+
+        <!--</div>-->
+
 
 
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -63,19 +67,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                 $('.search-input').val('');
                 $('.search-icon').css('opacity', '');
             });
-            
+
             /*index hover function*/
             $('.nav-item').hover(function () {
                 $(this).css('color', '#333333');
-            }, function(){
+            }, function () {
                 $(this).css('color', '#000');
             });
             $('.dropdown').hover(function () {
                 $(this).css('color', '#333333');
-            }, function(){
+            }, function () {
                 $(this).css('color', '#000');
             });
         </script>
-        
+
     </body>
 </html>
