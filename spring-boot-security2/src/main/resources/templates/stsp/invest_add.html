@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     <tbody >
                         <tr>
                             <td>
-                                <select class="">
+                                <select class="" name="Industry_name">
                                     <option selected="true" value="">-- 請選擇 --</option>
                                     <option th:each="c : ${category}" th:value="${c.Industry_name}" th:text="${c.Industry_name}"></option>
                                 </select>                                
@@ -84,8 +84,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                         </tr>
                     </tbody>
                 </table>
-                
-                <button type="submit" id="submit" class="btn btn-primary">追加</button>
+
+                <button type="submit" id="submit" class="btn btn-primary">追加</button>                
             </form>
         </div>
 
@@ -120,17 +120,56 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr th:each="invest : ${session.list}">
                         <td>
-                            <span>測試</span>                            
+
+                            <span th:text="${invest.Industry_name}"></span>
+
                         </td>
-                        <td th:each="i : ${#numbers.sequence(0, 11)}">
-                            <span>0</span>
-                        </td>  
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_TNI}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_KAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_TNI}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_valid_TNI}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_valid_KAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Accept_valid_QIAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Mass_production_TNI}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Mass_production_KAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Mass_production_QIAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Under_constructionTNI}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Under_construction_KAO}"></span>
+                        </td>
+                        <td>
+                            <span style="width:50px" th:text="${invest.Under_construction_QIAO}"></span>
+                        </td>   
                     </tr>
                 </tbody>
             </table>
-            <button type="button" id="" class="btn btn-primary">儲存</button>        
+            <button type="button" id="button" class="btn btn-primary">儲存</button>
+            <a th:href="@{/stsp/del_investList}" class="btn btn-danger">
+                <span>刪除List</span>
+            </a>
+            
         </div>
 
 
@@ -139,10 +178,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/Thymeleaf.html to edit
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>    
         <script>
-            //ajax for rest
-            $("#submit").on('click', function () {
-
-            })
+          
 
 
 

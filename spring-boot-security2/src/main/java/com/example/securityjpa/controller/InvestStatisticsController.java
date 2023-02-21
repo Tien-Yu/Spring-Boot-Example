@@ -36,7 +36,7 @@ public class InvestStatisticsController {
     }
     
     @GetMapping("/invest_add")
-    public String add(Model m){
+    public String add(Model m, HttpSession session){
         InvestStatistics invest = new InvestStatistics();
         
         m.addAttribute("category", catService.findAllByOrderBySortNoAsc());        
@@ -44,13 +44,19 @@ public class InvestStatisticsController {
         
         return "stsp/invest_add";
     }
+    @GetMapping("/del_investList")
+    public String del(Model m, HttpSession session){
+        session.removeAttribute("list");        
+        return add(m, session);
+    }
+    
     
     @PostMapping("/insert")
     public String insert(InvestStatistics inv, HttpSession session){        
         List<InvestStatistics> list = (List)session.getAttribute("list");
         if(list == null){
             list = new ArrayList<>();            
-        }
+        }    
         list.add(inv);        
         session.setAttribute("list", list);
         return "redirect:invest_add";
